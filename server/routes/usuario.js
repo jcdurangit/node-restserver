@@ -15,9 +15,13 @@ bcrypt.genSalt(saltRounds, function(err, salt) {
 
 
 const Usuario = require('../models/usuario');
+const { verificarToken, verificarAdminRole } = require('../middlewares/autenticacion')
+
 const app = express();
 
-app.get('/usuario', function(req, res) {
+//SE CREARA UN MIDDLEWARES SE COLOCA COMO UN SEGUNDO ARGUMENTO EN LOS SERVICIOS GET..USANDO LO QUE ES ES EXPREES
+
+app.get('/usuario', verificarToken, (req, res) => {
     //res.json('Get Usuario');
     //skip salta la cantidad en relación a los primeros registros
 
@@ -51,7 +55,7 @@ app.get('/usuario', function(req, res) {
         });
 
 });
-app.post('/usuario', function(req, res) {
+app.post('/usuario', [verificarToken, verificarAdminRole], (req, res) => {
 
     let body = req.body;
 
@@ -96,7 +100,7 @@ app.post('/usuario', function(req, res) {
 
 })
 
-app.put('/usuario/:id', function(req, res) {
+app.put('/usuario/:id', [verificarToken, verificarAdminRole], (req, res) => {
 
     let id = req.params.id; // El primer id solo es una variable el segundo es el id de /usuario/id
 
@@ -116,14 +120,14 @@ app.put('/usuario/:id', function(req, res) {
 
         res.json({
             ok: true,
-            usuarios
+            usuario: usuarioDB
         });
 
     });
 
 });
 
-app.delete('/usuario/:id', function(req, res) {
+app.delete('/usuario/:id', [verificarToken, verificarAdminRole], (req, res) => {
 
     //Eliminación de usuarios
 
