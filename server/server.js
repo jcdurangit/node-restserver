@@ -3,6 +3,8 @@ const express = require('express');
 // Using Node.js `require()`
 const mongoose = require('mongoose');
 
+const path = require('path');
+
 const app = express();
 const bodyParser = require('body-parser');
 
@@ -11,6 +13,9 @@ app.use(bodyParser.urlencoded({ extended: false })) //Solo se dispara cuando pas
 
 // parse application/json
 app.use(bodyParser.json())
+
+//HABILITAR LA CARPETA PUBLIC
+app.use(express.static(path.resolve(__dirname, '../public')));
 
 //CONFIGURACIÓN GLOBAL DE RUTAS
 app.use(require('./routes/index'));
